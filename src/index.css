@@ -1,1 +1,82 @@
+@import url('https://fonts.googleapis.com/css2?family=Funnel+Display:wght@300..800&display=swap');
 @import "tailwindcss";
+
+@theme {
+    --color-white: #fafafa;
+    --color-obsidian: #151932;
+    --color-teal-tide: #3ADFAA;
+    --color-blue-velvet: #3850DC;
+    --color-tangerine: #F78837;
+    --color-gray-light: #DFE5E5;
+
+    --animate-rotate-y: rotate-y 2s ease-in-out infinite;
+    @keyframes rotate-y {
+        0% {
+            transform: perspective(1000px) rotateY(0deg);
+        }
+        100% {
+            transform: perspective(1000px) rotateY(360deg);
+        }
+    }
+
+    --animate-rotate-x: rotate-x 2s ease-in-out infinite;
+    @keyframes rotate-x {
+        0% {
+            transform: perspective(1000px) rotateX(0deg);
+        } 
+        100% {
+            transform: perspective(1000px) rotateX(360deg);
+        }
+    }
+
+    --animate-fade-left: fade-left 2s ease-in-out infinite alternate;
+    @keyframes fade-left {
+        0% {
+            opacity: 0;
+            transform: translateX(-20px);
+        }
+        100% {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    --animate-fade-right: fade-right 2s ease-in-out infinite alternate;
+    @keyframes fade-right {
+        0% {
+            opacity: 0;
+            transform: translateX(20px);
+        }
+        100% {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    --animate-wiggle: wiggle 1s ease-in-out infinite;
+    @keyframes wiggle {
+        0%, 100% {
+            transform: rotate(0deg);
+        }
+        25% {
+            transform: rotate(5deg);
+        }
+        50% {
+            transform: rotate(-5deg);
+        }
+        75% {
+            transform: rotate(3deg);
+        }
+    }
+
+}
+
+body {
+    font-family: "Funnel Display", sans-serif;
+}
+
+bg-wavy {
+    background-color: #e5e5f7;
+    opacity: 0.2;
+    background-image:  repeating-radial-gradient( circle at 0 0, transparent 0, #e5e5f7 40px ), repeating-linear-gradient( #3850DC55, #3850DC );
+}
