@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
 import useFetch from '../../hooks/useFetch.js';
 import AuthLayout from '../../components/auth/AuthLayout.jsx';
 
@@ -88,6 +89,7 @@ const goToLogin = () => {
 
 return (
     <div className="flex h-screen">
+        <ToastContainer />
     {/* Sección de formularios */}
     <div className="flex flex-col flex-1 w-full overflow-y-auto lg:w-1/2 scrollbar-hide">
         <div className="flex-1 flex flex-col items-center justify-center p-6">
