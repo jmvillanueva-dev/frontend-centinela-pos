@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Redireccionando...</title>
+    <script>
+    const segment = 1;
+    const l = window.location;
+    const redirect = l.pathname.split('/').slice(0, 1 + segment).join('/') + '/?p=/' +
+        l.pathname.slice(1).split('/').slice(segment).join('/').replace(/&/g, '~and~') +
+        (l.search ? '&q=' + l.search.slice(1).replace(/&/g, '~and~') : '') +
+        l.hash;
+    
+    // Redirección con timeout para mejor experiencia
+    setTimeout(() => {
+        l.replace(l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') + redirect);
+    }, 300);
+    </script>
+</head>
+<body>
+    <h1>Redireccionando...</h1>
+</body>
+</html>
