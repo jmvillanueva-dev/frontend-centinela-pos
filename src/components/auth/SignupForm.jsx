@@ -3,7 +3,6 @@ import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import useFetch from '../../hooks/useFetch.js';
 
-
 const SignupForm = ({ onToggleAuth }) => {
     const [role, setRole] = useState('owner');
     const {
@@ -15,36 +14,32 @@ const SignupForm = ({ onToggleAuth }) => {
 const { fetchDataBackend } = useFetch();
 
 const onSubmit = (data) => {
-    try {
-        const baseUrl = import.meta.env.VITE_API_URL;
-        if (!baseUrl) {
-            throw new Error('La URL de la API no está configurada');
-        }
-
-        const endpoint = role === 'owner' ? '/boss/register' : '/employees/register';
-        const url = `${baseUrl}${endpoint}`;
-        fetchDataBackend(url, data, 'POST');
-    } catch (error) {
-        console.log(error)
+    const baseUrl = import.meta.env.VITE_API_URL;
+    if (!baseUrl) {
+        throw new Error('La URL de la API no está configurada');
     }
+
+    const endpoint = role === 'owner' ? '/boss/register' : '/employees/register';
+    const url = `${baseUrl}${endpoint}`;
+    fetchDataBackend(url, data, 'POST');
 };
 
-// Función de validación para cédula costarricense (ejemplo)
-const validateCedula = (cedula) => {
-    const cleanCedula = cedula.replace(/[- ]/g, '');
+// // Función de validación para cédula costarricense (ejemplo)
+// const validateCedula = (cedula) => {
+//     const cleanCedula = cedula.replace(/[- ]/g, '');
 
-    if (cleanCedula.length < 9 || cleanCedula.length > 12) return false;
+//     if (cleanCedula.length < 9 || cleanCedula.length > 12) return false;
 
-    if (!/^\d+$/.test(cleanCedula)) return false;
-    if (cleanCedula.length === 9) {
-        const provinceCode = parseInt(cleanCedula.slice(0, 2), 10);
-        if (provinceCode < 1 || provinceCode > 7) return false;
-    } else if (cleanCedula.length === 12) {
-        const firstDigit = parseInt(cleanCedula[0], 10);
-        if (firstDigit < 1 || firstDigit > 2) return false;
-    }  
-    return true;
-};
+//     if (!/^\d+$/.test(cleanCedula)) return false;
+//     if (cleanCedula.length === 9) {
+//         const provinceCode = parseInt(cleanCedula.slice(0, 2), 10);
+//         if (provinceCode < 1 || provinceCode > 7) return false;
+//     } else if (cleanCedula.length === 12) {
+//         const firstDigit = parseInt(cleanCedula[0], 10);
+//         if (firstDigit < 1 || firstDigit > 2) return false;
+//     }  
+//     return true;
+// };
 
 return (
 <div className="w-full max-w-md">
@@ -121,9 +116,6 @@ return (
             pattern: {
                 value: /^[0-9]{6,12}$/,
                 message: 'La cédula debe contener solo números (6-12 dígitos)'
-            },
-            validate: {
-                validId: value => validateCedula(value) || 'Cédula inválida'
             }
             })}
             className={`w-full px-4 py-2.5 sm:py-2 text-sm sm:text-base border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${

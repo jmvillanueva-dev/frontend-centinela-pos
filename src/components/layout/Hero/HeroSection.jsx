@@ -14,6 +14,7 @@ import {
   Store,
   SwitchCamera
 } from "lucide-react";
+import { Link } from "react-router-dom";
 
 import centinelaLogo from "../../../assets/centinela.svg";
 import posDemo from "../../../assets/pos-demo.mp4";
@@ -126,12 +127,12 @@ export default function HeroSection() {
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-12">
-              <a className="group relative px-8 py-4 bg-blue-velvet text-white font-semibold rounded-full hover:bg-blue-700 transform hover:scale-105 transition-all duration-300 shadow-xl cursor-pointer">
+              <Link to="/register"  className="group relative px-8 py-4 bg-blue-velvet text-white font-semibold rounded-full hover:bg-blue-700 transform hover:scale-105 transition-all duration-300 shadow-xl cursor-pointer">
                 <span className="flex items-center justify-center">
                   Pruébalo ahora
                   <ArrowRight className="w-5 h-5 ml-2 group-hover:animate-pulse group-hover:translate-x-2 group-hover:scale-150 transition-all duration-300" />
                 </span>
-              </a>
+              </Link>
               
               <div className="flex rounded-full bg-gradient-to-tr from-blue-velvet to-teal-tide p-0.5 shadow-lg will-change-transform">
                 <button className="group flex-1 text-md bg-gray-light px-6 py-3 hover:scale-105 rounded-full hover:-translate-y-2 transition duration-500 items-center flex justify-center hover:shadow-md will-change">

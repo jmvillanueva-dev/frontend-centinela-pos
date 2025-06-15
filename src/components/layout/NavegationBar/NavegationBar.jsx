@@ -90,7 +90,7 @@ const NavigationBar = () => {
 
           {/* CTA Buttons */}
           <div className="hidden lg:flex items-center space-x-4">
-            <Link to="/auth/login" 
+            <Link to="/login" 
               className={`px-6 py-2.5 font-medium rounded-full transition-all ${isScrolled ? "bg-blue-velvet text-white hover:bg-blue-velvet/90" : "bg-white text-obsidian hover:bg-gray-100"} shadow-md hover:scale-105`}
             >
               <span className="flex items-center">
@@ -121,7 +121,8 @@ const NavigationBar = () => {
             <div className="space-y-2">
               {navItems.map((item, index) => (
                 <div key={index}>
-                  <div
+                  <a
+                    href={item.href}
                     className="flex justify-between items-center px-3 py-3 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer"
                     onClick={() => item.submenu && toggleSubmenu(index)}
                   >
@@ -132,7 +133,7 @@ const NavigationBar = () => {
                     {item.submenu && (
                       <ChevronDown className={`h-5 w-5 transition-transform ${activeSubmenu === index ? "rotate-180" : ""}`} />
                     )}
-                  </div>
+                  </a>
 
                   {item.submenu && activeSubmenu === index && (
                     <div className="ml-4 mt-1 space-y-1">
@@ -153,7 +154,7 @@ const NavigationBar = () => {
 
               <div className="pt-4 border-t border-gray-200">
                 <Link
-                  to="/auth/login"
+                  to="/login"
                   className="flex items-center justify-center px-6 py-2.5 bg-blue-velvet text-white font-medium rounded-full hover:bg-blue-velvet/90 transition-colors shadow-md"
                 >
                   <CircleUserRound size={16} className="mr-2" />

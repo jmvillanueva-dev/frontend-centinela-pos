@@ -64,7 +64,7 @@ export default function ContactSection() {
               className="flex items-center gap-3 pt-2 text-gray-600 hover:text-blue-velvet transition-colors"
             >
               <Phone className="text-blue-velvet" />
-              <span>+57 604 444 5555</span>
+              <span>+593 99 591 0854</span>
             </a>
           </div>
         </div>
