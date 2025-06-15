@@ -10,9 +10,14 @@ const AuthPage = () => {
     const [isLogin, setIsLogin] = useState(type === 'login');
 
     useEffect(() => {
-    // Sincronizar el estado con la ruta actual
-    setIsLogin(type === 'login');
-    }, [type]);
+    if (type !== 'login' && type !== 'register') {
+        navigate('/auth/login', { replace: true });
+    } else {
+        setIsLogin(type === 'login');
+    }
+    }, [type, navigate]);
+
+
 
     const toggleAuthMode = () => {
     const newType = isLogin ? 'register' : 'login';

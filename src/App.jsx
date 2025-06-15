@@ -1,25 +1,18 @@
-import { BrowserRouter, Routes, Route } from 'react-router';
+import { Routes, Route, BrowserRouter } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 
 import Home from './pages/Home/Home.jsx';
 import AuthPage from './pages/Auth/AuthPage.jsx';
 import EmailConfirmation from './pages/Auth/EmailConfirmation.jsx';
 
-
 function App() {
-
   return (
     <>
       <BrowserRouter basename="/frontend-centinela-pos/">
         <Routes>
-          <Route index element={<Home />} />
-          <Route path="auth/:type" element={<AuthPage />} />
-          <Route path="auth/login" element={<AuthPage />} />
-          <Route path="auth/register" element={<AuthPage />} />
-          {/* <Route path="auth/forgot-password" element={<AuthPage />} /> */}
-          {/* <Route path="auth/reset-password" element={<AuthPage />} /> */}
-
-          <Route path="confirm/:rol/:token" element={<EmailConfirmation />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/auth/:type" element={<AuthPage />} />
+          <Route path="/confirm/:rol/:token" element={<EmailConfirmation />} />
         </Routes>
       </BrowserRouter>
 
@@ -35,7 +28,7 @@ function App() {
         pauseOnHover
       />
     </>
-  )
+  );
 }
 
 export default App;
