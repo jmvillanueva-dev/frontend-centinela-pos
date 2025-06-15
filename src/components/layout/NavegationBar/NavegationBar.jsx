@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from 'react-router-dom';
 import { 
   Menu, X, ShoppingCart, Zap, User, ChevronDown,
   CircleUserRound, Home, DollarSign, MessageSquare
@@ -89,15 +90,14 @@ const NavigationBar = () => {
 
           {/* CTA Buttons */}
           <div className="hidden lg:flex items-center space-x-4">
-            <a
-              href="#"
+            <Link to="/auth/login" 
               className={`px-6 py-2.5 font-medium rounded-full transition-all ${isScrolled ? "bg-blue-velvet text-white hover:bg-blue-velvet/90" : "bg-white text-obsidian hover:bg-gray-100"} shadow-md hover:scale-105`}
             >
               <span className="flex items-center">
                 <CircleUserRound size={16} className="mr-2" />
                 Iniciar Sesión
               </span>
-            </a>
+            </Link>
           </div>
 
           {/* Mobile Menu Button */}
@@ -152,13 +152,13 @@ const NavigationBar = () => {
               ))}
 
               <div className="pt-4 border-t border-gray-200">
-                <a
-                  href="#"
+                <Link
+                  to="/auth/login"
                   className="flex items-center justify-center px-6 py-2.5 bg-blue-velvet text-white font-medium rounded-full hover:bg-blue-velvet/90 transition-colors shadow-md"
                 >
                   <CircleUserRound size={16} className="mr-2" />
                   Iniciar Sesión
-                </a>
+                </Link>
               </div>
             </div>
           </div>

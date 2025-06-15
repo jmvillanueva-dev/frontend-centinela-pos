@@ -12,7 +12,7 @@ function Home() {
       <>
         <Navbar></Navbar>
         <main>
-           <HeroSection></HeroSection>
+          <HeroSection></HeroSection>
           <FeaturesSection></FeaturesSection>
           <PricingSection></PricingSection> 
           <NewsletterSection></NewsletterSection>
