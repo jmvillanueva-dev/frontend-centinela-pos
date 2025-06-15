@@ -1,23 +1,55 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
     <meta charset="utf-8">
-    <title>Redireccionando...</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon-app.svg" />
+    <title>Redireccionando | CentinelaPOS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
     <script>
-    const segment = 1;
-    const l = window.location;
-    const redirect = l.pathname.split('/').slice(0, 1 + segment).join('/') + '/?p=/' +
-        l.pathname.slice(1).split('/').slice(segment).join('/').replace(/&/g, '~and~') +
-        (l.search ? '&q=' + l.search.slice(1).replace(/&/g, '~and~') : '') +
-        l.hash;
-    
-    // Redirección con timeout para mejor experiencia
-    setTimeout(() => {
-        l.replace(l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') + redirect);
-    }, 300);
+        const segment = 1;
+        const l = window.location;
+        const redirect = l.pathname.split('/').slice(0, 1 + segment).join('/') + '/?p=/' +
+            l.pathname.slice(1).split('/').slice(segment).join('/').replace(/&/g, '~and~') +
+            (l.search ? '&q=' + l.search.slice(1).replace(/&/g, '~and~') : '') +
+            l.hash;
+        
+        setTimeout(() => {
+            l.replace(l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') + redirect);
+        }, 800);
     </script>
+    <style>
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .animate-spin-slow {
+            animation: spin 1.5s linear infinite;
+        }
+    </style>
 </head>
-<body>
-    <h1>Redireccionando...</h1>
+<body class="bg-gray-white min-h-screen flex items-center justify-center">
+    <div class="text-center p-8 max-w-md mx-auto">
+        
+        <div class="mb-6 flex justify-center">
+            <div class="animate-spin-slow text-blue-600">
+                <i data-lucide="loader-circle" width="48" height="48" stroke-width="1.5"></i>
+            </div>
+        </div>
+        
+        <h1 class="text-2xl font-bold text-gray-800  mb-2">Redireccionando</h1>
+        
+        <div class="bg-blue-50border border-blue-200 rounded-lg p-4">
+            <div class="flex items-center text-blue-600">
+                <i data-lucide="info" class="mr-2" width="20" height="20"></i>
+                <span class="text-sm">Si la redirección no funciona, haz clic <a href="/" class="font-medium underline">aquí</a></span>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        lucide.createIcons();
+    </script>
 </body>
 </html>
