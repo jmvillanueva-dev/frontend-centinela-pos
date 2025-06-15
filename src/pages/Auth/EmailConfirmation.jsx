@@ -39,8 +39,8 @@ const EmailConfirmation = () => {
         toast.dismiss(toastId);
         toast.success(
           rol === 'jefe' 
-            ? 'Email de propietario verificado correctamente' 
-            : 'Email de empleado verificado correctamente',
+            ? 'Tu cuenta de propietario ha sido verificada correctamente' 
+            : 'Tu cuenta de empleado ha sido verificada correctamente',
           { autoClose: 5000 }
         );
 
@@ -56,7 +56,7 @@ const EmailConfirmation = () => {
         } else {
           toast.error(error.message || 'Error al verificar el email');
           setVerificationStatus('error');
-          setTimeout(() => navigate('/auth/login'), 3000);
+          setTimeout(() => navigate('/login'), 3000);
         }
       }
     };
@@ -65,7 +65,7 @@ const EmailConfirmation = () => {
   }, [token, rol, navigate]);
 
   const handleLoginRedirect = () => {
-    navigate('/auth/login');
+    navigate('/login');
   };
 
   const Button = ({ children, onClick, className = '' }) => (

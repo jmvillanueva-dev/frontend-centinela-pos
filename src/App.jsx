@@ -5,6 +5,8 @@ import Home from './pages/Home/Home.jsx';
 import LoginPage from './pages/Auth/LoginPage.jsx';
 import RegisterPage from './pages/Auth/RegisterPage.jsx';
 import EmailConfirmation from './pages/Auth/EmailConfirmation.jsx';
+import ForgotPassword from './pages/Auth/ForgotPassword.jsx';
+import ResetPassword from './pages/Auth/ResetPassword.jsx';
 
 function App() {
   const location = useLocation();
@@ -15,7 +17,6 @@ function App() {
     const redirectPath = query.get('p');
     
     if (redirectPath) {
-      // Decodificar la ruta y manejar caracteres especiales
       const decodedPath = decodeURIComponent(redirectPath.replace(/~and~/g, '&'));
       navigate(decodedPath, { replace: true });
     }
@@ -28,6 +29,8 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/confirm/:rol/:token" element={<EmailConfirmation />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
       </Routes>
 
       <ToastContainer

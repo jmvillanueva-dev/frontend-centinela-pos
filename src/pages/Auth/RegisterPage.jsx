@@ -1,60 +1,86 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import useFetch from '../../hooks/useFetch.js';
 import AuthLayout from '../../components/auth/AuthLayout.jsx';
 
 const RegisterPage = () => {
-const navigate = useNavigate();
-const [role, setRole] = useState('owner');
-const {
-    register,
-    handleSubmit,
-    formState: { errors },
-} = useForm();
+    const navigate = useNavigate();
+    const [role, setRole] = useState('owner');
+    const [cedulaError, setCedulaError] = useState(null);
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+        reset,
+        watch
+    } = useForm();
 
-const { fetchDataBackend } = useFetch();
+    const { fetchDataBackend } = useFetch();
+    const cedulaValue = watch('cedula');
 
-const onSubmit = (data) => {
-    try {
-    const baseUrl = import.meta.env.VITE_API_URL;
-    if (!baseUrl) {
-        throw new Error('La URL de la API no está configurada');
-    }
-
-    const endpoint = role === 'owner' ? '/boss/register' : '/employees/register';
-    const url = `${baseUrl}${endpoint}`;
-    fetchDataBackend(url, data, 'POST');
-    } catch (error) {
-    console.log(error);
-    }
-};
-
-const validateCedula = (cedula) => {
-    const cleanCedula = cedula.replace(/[- ]/g, '');
-    
-    if (cleanCedula.length < 9 || cleanCedula.length > 12) {
-        return 'La cédula debe tener entre 9 y 12 dígitos';
-    }
-
-    if (!/^\d+$/.test(cleanCedula)) {
-        return 'La cédula solo debe contener números';
-    }
-
-    if (cleanCedula.length === 9) {
-        const provinceCode = parseInt(cleanCedula.slice(0, 2), 10);
-        if (provinceCode < 1 || provinceCode > 7) {
-        return 'Código de provincia inválido (debe ser entre 01-07)';
+    useEffect(() => {
+        if (cedulaValue && cedulaValue.length > 0) {
+            const error = validateCedula(cedulaValue);
+            setCedulaError(error === true ? null : error);
+        } else {
+            setCedulaError(null);
         }
-    } else if (cleanCedula.length === 12) {
-        const firstDigit = parseInt(cleanCedula[0], 10);
-        if (firstDigit < 1 || firstDigit > 2) {
-        return 'Primer dígito inválido para cédula de 12 caracteres';
+    }, [cedulaValue]);
+
+    const onSubmit = async (data) => {
+        // Verificación adicional de cédula antes de enviar
+        const cedulaValidation = validateCedula(data.cedula);
+        if (cedulaValidation !== true) {
+            setCedulaError(cedulaValidation);
+            return;
         }
-    }
-    
-    return true;
-};
+
+        try {
+            const baseUrl = import.meta.env.VITE_API_URL;
+            if (!baseUrl) throw new Error('La URL de la API no está configurada');
+
+            const endpoint = role === 'owner' ? '/boss/register' : '/employees/register';
+            const url = `${baseUrl}${endpoint}`;
+            
+            const response = await fetchDataBackend(url, data, 'POST');
+            
+            if (response) {
+                reset();
+                setRole('owner');
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const validateCedula = (cedula) => {
+        const cleanCedula = cedula.replace(/[- ]/g, '');
+        
+        if (cleanCedula.length === 0) return null; // No mostrar error si está vacío
+        
+        if (cleanCedula.length < 9 || cleanCedula.length > 12) {
+            return 'La cédula debe tener entre 9 y 12 dígitos';
+        }
+
+        if (!/^\d+$/.test(cleanCedula)) {
+            return 'La cédula solo debe contener números';
+        }
+
+        if (cleanCedula.length === 9) {
+            const provinceCode = parseInt(cleanCedula.slice(0, 2), 10);
+            if (provinceCode < 1 || provinceCode > 7) {
+                return 'Código de provincia inválido (debe ser entre 01-07)';
+            }
+        } else if (cleanCedula.length === 12) {
+            const firstDigit = parseInt(cleanCedula[0], 10);
+            if (firstDigit < 1 || firstDigit > 2) {
+                return 'Primer dígito inválido para cédula de 12 caracteres';
+            }
+        }
+        
+        return true;
+    };
 
 const goToLogin = () => {
     navigate('/login');
@@ -135,28 +161,29 @@ return (
                     type="text"
                     placeholder="Ingresa tu número de identificación"
                     {...register('cedula', { 
-                    required: 'La cédula es requerida',
-                    pattern: {
-                        value: /^[0-9]{6,12}$/,
-                        message: 'La cédula debe contener solo números (6-12 dígitos)'
-                    },
-                    validate: {
-                        validId: value => {
-                        const result = validateCedula(value);
-                        return result === true || result; // Devuelve true o el mensaje de error
+                        required: 'La cédula es requerida',
+                        pattern: {
+                            value: /^[0-9- ]{6,12}$/,
+                            message: 'Formato de cédula inválido'
+                        },
+                        onChange: (e) => {
+                            // Formateo automático (opcional)
+                            let value = e.target.value.replace(/[^0-9- ]/g, '');
+                            if (value.length > 12) value = value.substring(0, 12);
+                            e.target.value = value;
                         }
-                    }
                     })}
                     className={`w-full px-4 py-2.5 sm:py-2 text-sm sm:text-base border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                    errors.cedula ? 'border-red-500' : 'border-gray-300'
+                        cedulaError || errors.cedula ? 'border-red-500' : 'border-gray-300'
                     }`}
                 />
-                {errors.cedula && (
+                {(cedulaError || errors.cedula) && (
                     <p className="mt-1 text-sm text-red-600 animate-fade-in">
-                    {errors.cedula.message}
+                        {cedulaError || errors.cedula.message}
                     </p>
                 )}
-                </div>
+            </div>
+
             <div>
                 <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
                 Correo electrónico *
