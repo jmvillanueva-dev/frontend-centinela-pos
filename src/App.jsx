@@ -14,6 +14,11 @@ function App() {
         <Routes>
           <Route index element={<Home />} />
           <Route path="auth/:type" element={<AuthPage />} />
+          <Route path="auth/login" element={<AuthPage />} />
+          <Route path="auth/register" element={<AuthPage />} />
+          {/* <Route path="auth/forgot-password" element={<AuthPage />} /> */}
+          {/* <Route path="auth/reset-password" element={<AuthPage />} /> */}
+
           <Route path="confirm/:rol/:token" element={<EmailConfirmation />} />
         </Routes>
       </BrowserRouter>
