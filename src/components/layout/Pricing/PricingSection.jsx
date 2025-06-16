@@ -1,5 +1,6 @@
 import { Check, Zap, BarChart, Users, ShoppingCart, Building2 , MessagesSquare  } from "lucide-react";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 export default function PricingSection() {
 const [selectedPlan, setSelectedPlan] = useState("business"); // Business preseleccionado
@@ -39,7 +40,7 @@ const plans = [
     cta: "Prueba 7 días gratis",
     color: "from-teal-tide/20 to-teal-tide/40",
     textColor: "text-teal-600",
-    popular: true // Destacar este plan como popular
+    popular: true 
 },
 {
     id: "enterprise",
@@ -104,16 +105,17 @@ return (
                 {plan.period && <span className="text-lg text-slate-500 ml-1">{plan.period}</span>}
             </div>
             <p className="text-slate-600 mb-6">{plan.description}</p>
-            
-            <button 
-                className={`w-full py-3 px-6 rounded-lg font-semibold mb-8 transition-all ${
-                selectedPlan === plan.id
-                    ? "bg-blue-velvet text-white hover:shadow-lg hover:shadow-teal-tide/30"
-                    : "bg-white text-obsidian border border-gray-300 hover:border-teal-tide"
-                }`}
-            >
-                {plan.cta}
-            </button>
+            <Link to="/register">
+                <button 
+                    className={`w-full py-3 px-6 rounded-lg font-semibold mb-8 transition-all ${
+                    selectedPlan === plan.id
+                        ? "bg-blue-velvet text-white hover:shadow-lg hover:shadow-teal-tide/30"
+                        : "bg-white text-obsidian border border-gray-300 hover:border-teal-tide"
+                    }`}
+                >
+                    {plan.cta}
+                </button>
+            </Link>
             </div>
             
             <div className="p-8 bg-white">
