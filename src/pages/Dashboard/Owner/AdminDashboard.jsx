@@ -94,7 +94,7 @@ const AdminDashboard = () => {
 
             setShowBusinessModal(false);
             resetBusiness();
-            toast.success('Negocio registrado exitosamente');
+            // toast.success('Negocio registrado exitosamente');
             
             storeAuth.getState().login(storeAuth.getState().token, {
                 ...userData,
@@ -112,7 +112,7 @@ const AdminDashboard = () => {
                 errorMessage = error.message;
             }
             
-            toast.error(errorMessage);
+            // toast.error(errorMessage);
         }
     };
 
@@ -132,7 +132,7 @@ const AdminDashboard = () => {
 
             setShowEmployeeModal(false);
             resetEmployee();
-            toast.success('Empleado registrado exitosamente');
+            // toast.success('Empleado registrado exitosamente');
         } catch (error) {
             console.error('Error al registrar empleado:', error);
             let errorMessage = 'Error al registrar el empleado';
@@ -144,7 +144,7 @@ const AdminDashboard = () => {
                 errorMessage = error.message;
             }
             
-            toast.error(errorMessage);
+            // toast.error(errorMessage);
         }
     };
     return (

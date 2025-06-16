@@ -13,6 +13,7 @@ const LoginPage = () => {
   const [activeTab, setActiveTab] = useState('employee');
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  
 
   const {
     register,
@@ -79,7 +80,7 @@ const LoginPage = () => {
       errorMessage = error.message;
     }
 
-    toast.error(errorMessage);
+    // toast.error(errorMessage);
 
     if (error.response?.status === 401) {
       reset({ password: '' });
