@@ -16,6 +16,7 @@ import PublicRoute from './routes/PublicRoute.jsx';
 import ProtectedRoute from './routes/ProtectedRoute.jsx';
 
 function App() {
+    
     const location = useLocation();
     const navigate = useNavigate();
 
