@@ -21,7 +21,6 @@ const EmailConfirmation = () => {
         
         const url = `${import.meta.env.VITE_API_URL}${endpoint}`;
         
-        // Usamos fetch directamente para evitar toast duplicado
         const response = await fetch(url, {
           method: 'GET',
           headers: {

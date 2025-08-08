@@ -36,7 +36,7 @@ const ForgotPassword = () => {
                             </label>
                             <input
                                 type="email"
-                                placeholder="tu@correo.com"
+                                placeholder="ingresa.tu.correo@email.com"
                                 className="block w-full rounded-md border border-[var(--color-gray-light)] focus:border-[var(--color-blue-velvet)] focus:outline-none focus:ring-1 focus:ring-[var(--color-blue-velvet)] py-2 px-3 text-[var(--color-obsidian)]"
                                 {...register("email", {
                                     required: "El correo es requerido",
@@ -51,7 +51,7 @@ const ForgotPassword = () => {
 
                         <div>
                             <label className="block text-sm font-medium text-[var(--color-obsidian)] mb-1">
-                                Rol
+                                Elige tu Rol
                             </label>
                             <select
                                 className="block w-full rounded-md border border-[var(--color-gray-light)] focus:border-[var(--color-blue-velvet)] focus:outline-none focus:ring-1 focus:ring-[var(--color-blue-velvet)] py-2 px-3 text-[var(--color-obsidian)]"
