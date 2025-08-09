@@ -48,16 +48,10 @@ const LoginPage = () => {
     }
 
     // Guardar datos en el store sin token (usamos un valor temporal)
-    storeAuth.getState().login('token-temporario', {
-      nombres: response.nombres,
-      apellidos: response.apellidos,
-      cedula: response.cedula,
-      email: response.email,
-      companyCode: response.companyCode,
-      plan: response.plan,
-      rol: response.rol,
-      _id: response._id
-    });
+    storeAuth.getState().login(response.token, response);
+
+    localStorage.setItem("token", response.token);
+    localStorage.setItem("user", JSON.stringify(response));
 
     // Redirigir según el rol
     const redirectPath = response.rol === 'jefe' 
@@ -79,8 +73,7 @@ const LoginPage = () => {
     } else if (error.message) {
       errorMessage = error.message;
     }
-
-    // toast.error(errorMessage);
+    toast.error(errorMessage);
 
     if (error.response?.status === 401) {
       reset({ password: '' });
