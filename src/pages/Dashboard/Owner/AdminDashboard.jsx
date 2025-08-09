@@ -128,6 +128,7 @@ const AdminDashboard = () => {
           `Error ${error.response.status}: ${error.response.statusText}`;
       } else if (error.message) {
         errorMessage = error.message;
+        console.log(errorMessage);
       }
 
       // toast.error(errorMessage);
