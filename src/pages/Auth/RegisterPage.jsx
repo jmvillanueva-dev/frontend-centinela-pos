@@ -22,6 +22,7 @@ const RegisterPage = () => {
   const { fetchDataBackend } = useFetch();
   const cedulaValue = watch("cedula");
 
+  // Efecto para validar la cédula en tiempo real
   useEffect(() => {
     if (cedulaValue && cedulaValue.length > 0) {
       const error = validateCedula(cedulaValue);
@@ -172,7 +173,7 @@ const RegisterPage = () => {
               <div className="flex justify-center mb-3">
                 <Link
                   to="https://pos-centinela-backend.onrender.com/api/auth/google"
-                  className="text-sm sm:text-base w-xs     flex items-center justify-center gap-2 bg-white border border-gray-300 rounded-full py-2.5 px-4 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                  className="text-sm sm:text-base w-xs     flex items-center justify-center gap-2 bg-white border border-gray-300 rounded-full py-2.5 px-4 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -484,7 +485,7 @@ const RegisterPage = () => {
               <div className="flex justify-center">
                 <button
                   type="submit"
-                  className="w-2xs bg-blue-velvet text-white py-2 px-4 rounded-full  hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 mb-2"
+                  className="w-full bg-blue-velvet text-white py-2 px-4 rounded-full  hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 mb-2"
                 >
                   Registrarse
                 </button>

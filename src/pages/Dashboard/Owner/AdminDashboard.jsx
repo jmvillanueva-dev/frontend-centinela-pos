@@ -35,7 +35,6 @@ const AdminDashboard = () => {
   const [showBusinessModal, setShowBusinessModal] = useState(false);
   const [showEmployeeModal, setShowEmployeeModal] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   const { user: userData, logout: logoutFromStore } = storeAuth();
 
@@ -139,7 +138,7 @@ const AdminDashboard = () => {
     try {
       const payload = {
         emailEmpleado: data.email,
-        emailJefe: userData.email, // Obtenido del store
+        emailJefe: userData.email,
       };
 
       const url = `${import.meta.env.VITE_API_URL}/negocio/add-employee`;
@@ -162,6 +161,7 @@ const AdminDashboard = () => {
           `Error ${error.response.status}: ${error.response.statusText}`;
       } else if (error.message) {
         errorMessage = error.message;
+        console.log(errorMessage);
       }
 
       // toast.error(errorMessage);
@@ -321,15 +321,23 @@ const AdminDashboard = () => {
                 className="h-8 w-8 rounded-full bg-[var(--color-teal-tide)] flex items-center justify-center text-[var(--color-obsidian)] font-bold mr-2"
                 onClick={() => setDropdownOpen(!dropdownOpen)}
               >
-                {userData.nombres?.charAt(0)}
-                {userData.apellidos?.charAt(0)}
+                {userData.foto ? (
+                  <img src={userData.foto} alt="" />
+                ) : (
+                  <>
+                    {userData.nombres?.charAt(0)}
+                    {userData.apellidos?.charAt(0)}
+                  </>
+                )}
               </div>
 
               <div className="mr-1 hidden sm:block">
                 <div className="font-medium">
                   {userData.nombres} {userData.apellidos}
                 </div>
-                <div className="text-xs text-gray-500">Administrador</div>
+                <div className="text-xs text-gray-500">
+                  {userData.rol === "jefe" ? "Administrador" : "Empleado"}
+                </div>
               </div>
 
               <ChevronDown

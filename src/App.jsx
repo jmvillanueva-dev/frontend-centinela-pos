@@ -11,6 +11,7 @@ import ForgotPassword from './pages/Auth/ForgotPassword.jsx';
 import ResetPassword from './pages/Auth/ResetPassword.jsx';
 import EmployeeDashboard from './pages/Dashboard/Employe/EmployeeDashboard.jsx';
 import AdminDashboard from './pages/Dashboard/Owner/AdminDashboard.jsx';
+import GoogleAuthCallback from './pages/Auth/GoogleAuthCallback.jsx';
 import {
   UpgradePlanPage,
   PaymentResultPage,
@@ -49,6 +50,10 @@ function App() {
             />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password/:token" element={<ResetPassword />} />
+            <Route
+              path="/auth/google/callback"
+              element={<GoogleAuthCallback />}
+            />
           </Route>
 
           {/* Rutas protegidas */}
