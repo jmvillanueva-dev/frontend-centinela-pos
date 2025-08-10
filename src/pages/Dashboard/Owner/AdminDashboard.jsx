@@ -4,7 +4,6 @@ import { useForm } from "react-hook-form";
 import {
   Home,
   Users,
-  FileText,
   Settings,
   HelpCircle,
   Bell,
@@ -14,16 +13,17 @@ import {
   ShoppingCart,
   Package,
   BarChart2,
-  RefreshCw,
   Menu,
   X,
   Crown,
   Blocks,
+  Edit3,
+  LogOut,
 } from "lucide-react";
 import useFetch from "../../../hooks/useFetch.js";
 import storeAuth from "../../../context/storeAuth.jsx";
 import { ToastContainer, toast } from "react-toastify";
-
+import AdminProfileModal from "./AdminProfileModal.jsx";
 import centinelaIcon from "../../../assets/centinela-icon.svg";
 
 const AdminDashboard = () => {
@@ -34,9 +34,15 @@ const AdminDashboard = () => {
   const dropdownRef = useRef(null);
   const [showBusinessModal, setShowBusinessModal] = useState(false);
   const [showEmployeeModal, setShowEmployeeModal] = useState(false);
+  const [showProfileModal, setShowProfileModal] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
-  const { user: userData, logout: logoutFromStore } = storeAuth();
+  const {
+    user: userData,
+    logout: logoutFromStore,
+    login: loginToStore,
+  } = storeAuth();
 
   // Cerrar dropdown al hacer clic fuera
   useEffect(() => {
@@ -63,6 +69,39 @@ const AdminDashboard = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  // Efecto para manejar el responsive
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+      if (window.innerWidth >= 768) {
+        setSidebarOpen(false);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // Efecto para forzar la actualización de perfil si el usuario es de Google
+  useEffect(() => {
+    if (userData && userData.authGoogle) {
+      setShowProfileModal(true);
+    }
+  }, [userData]);
+
+  const handleLogout = () => {
+    logoutFromStore();
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    navigate("/login");
+    toast.success("Sesión cerrada correctamente");
+  };
+
+  const handleUpdateSuccess = (updatedUser) => {
+    const token = localStorage.getItem("token");
+    loginToStore(token, updatedUser);
+  };
+
   // Formularios
   const {
     register: registerBusiness,
@@ -78,26 +117,6 @@ const AdminDashboard = () => {
     reset: resetEmployee,
   } = useForm();
 
-  // Efecto para manejar el responsive
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
-      if (window.innerWidth >= 768) {
-        setSidebarOpen(false);
-      }
-    };
-
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  const handleLogout = () => {
-    logoutFromStore();
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    navigate("/login");
-    toast.success("Sesión cerrada correctamente");
-  };
 
   const registerNewBusiness = async (data) => {
     try {
@@ -167,6 +186,7 @@ const AdminDashboard = () => {
       // toast.error(errorMessage);
     }
   };
+
   return (
     <div className="flex h-screen bg-[var(--color-gray-light)]">
       <ToastContainer />
@@ -318,26 +338,33 @@ const AdminDashboard = () => {
               ref={dropdownRef}
             >
               <div
+                className="mr-2 hidden sm:block"
+                onClick={() => setDropdownOpen(!dropdownOpen)}
+              >
+                <div className="font-medium">
+                  {userData.nombres} {userData.apellidos}
+                </div>
+                <div className="text-xs text-gray-500 text-right">
+                  {userData.rol === "jefe" ? "Propietario | Admin" : "Empleado"}
+                </div>
+              </div>
+
+              <div
                 className="h-8 w-8 rounded-full bg-[var(--color-teal-tide)] flex items-center justify-center text-[var(--color-obsidian)] font-bold mr-2"
                 onClick={() => setDropdownOpen(!dropdownOpen)}
               >
                 {userData.foto ? (
-                  <img src={userData.foto} alt="" />
+                  <img
+                    src={userData.foto}
+                    alt=""
+                    className="rounded-full aspect-square object-cover"
+                  />
                 ) : (
                   <>
                     {userData.nombres?.charAt(0)}
                     {userData.apellidos?.charAt(0)}
                   </>
                 )}
-              </div>
-
-              <div className="mr-1 hidden sm:block">
-                <div className="font-medium">
-                  {userData.nombres} {userData.apellidos}
-                </div>
-                <div className="text-xs text-gray-500">
-                  {userData.rol === "jefe" ? "Administrador" : "Empleado"}
-                </div>
               </div>
 
               <ChevronDown
@@ -352,9 +379,20 @@ const AdminDashboard = () => {
                     {userData.nombres} {userData.apellidos}
                   </div>
                   <button
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
+                    className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
+                    onClick={() => {
+                      setShowProfileModal(true);
+                      setDropdownOpen(false);
+                    }}
+                  >
+                    <Edit3 size={16} />
+                    <span>Mi Perfil</span>
+                  </button>
+                  <button
+                    className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
                     onClick={handleLogout}
                   >
+                    <LogOut size={16} />
                     Cerrar sesión
                   </button>
                 </div>
@@ -365,6 +403,13 @@ const AdminDashboard = () => {
 
         {/* Contenido del dashboard */}
         <main className="flex-1 overflow-auto p-4 md:p-6">
+          <AdminProfileModal
+            showModal={showProfileModal}
+            setShowModal={setShowProfileModal}
+            userData={userData}
+            isAuthGoogleUser={userData?.authGoogle}
+            onUpdateSuccess={handleUpdateSuccess}
+          />
           {/* Sección de acciones rápidas */}
           <div className="mb-8">
             <h2 className="text-xl font-bold mb-4">Acciones rápidas</h2>
