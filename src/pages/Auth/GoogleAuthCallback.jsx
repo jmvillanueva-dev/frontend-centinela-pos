@@ -13,14 +13,28 @@ const GoogleAuthCallback = () => {
   const [searchParams] = useSearchParams();
 
   useEffect(() => {
+    // Extraer los parámetros de la URL
     const token = searchParams.get("token");
     const userDataParam = searchParams.get("user");
 
+    // --- Inicio de depuración exhaustiva ---
+    console.log("--- DEBUG: GoogleAuthCallback ---");
+    console.log("URL completa:", window.location.href);
+    console.log("Valor de 'token':", token);
+    console.log("Valor de 'user':", userDataParam);
+    console.log("---------------------------------");
+    // --- Fin de depuración ---
+
     if (token && userDataParam) {
       try {
-        const userData = JSON.parse(userDataParam);
+        // Decodificar el parámetro de la URL antes de analizarlo como JSON
+        const dataFromBackend = JSON.parse(decodeURIComponent(userDataParam));
+
+        // Acceder a los datos del usuario que ahora están anidados dentro de la propiedad 'jefe'
+        const userData = dataFromBackend.jefe;
 
         // Almacenar el token y los datos del usuario en el store de Zustand
+        // Pasamos el objeto 'userData' (el jefe) directamente
         storeAuth.getState().login(token, userData);
 
         // Persistir los datos en localStorage para mantener la sesión
@@ -33,11 +47,14 @@ const GoogleAuthCallback = () => {
         const redirectPath =
           userData.rol === "jefe" ? "/dashboard/admin" : "/dashboard/employee";
 
-        // Limpiar los parámetros de la URL y navegar
+        // Limpiar los parámetros de la URL y navegar, reemplazando la entrada del historial
         navigate(redirectPath, { replace: true });
       } catch (error) {
         console.error("Error al procesar los datos de Google:", error);
-        toast.error("Hubo un error al iniciar sesión con Google.");
+        // El error puede ser un JSON inválido, un URI malformado u otro problema de procesamiento
+        toast.error(
+          "Hubo un problema al procesar los datos de autenticación. Por favor, inténtalo de nuevo."
+        );
 
         // Redirigir a la página de login en caso de error
         navigate("/login", { replace: true });
