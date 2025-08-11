@@ -89,14 +89,12 @@ const AdminDashboard = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     navigate("/login");
-    toast.success("Sesión cerrada correctamente");
   };
 
   const handleUpdateSuccess = (updatedUser) => {
     const token = localStorage.getItem("token");
     loginToStore(token, updatedUser);
   };
-
 
   return (
     <div className="flex h-screen bg-[var(--color-gray-light)]">

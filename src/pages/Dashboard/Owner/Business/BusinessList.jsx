@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Eye, Edit, Plus, UserPlus } from "lucide-react";
 import useFetch from "../../../../hooks/useFetch.js";
 import { toast } from "react-toastify";
-import storeAuth from "../../../../context/storeAuth.jsx";
 
 const BusinessList = ({
   onSelectBusiness,
@@ -13,7 +12,6 @@ const BusinessList = ({
   const [businesses, setBusinesses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { user: userData } = storeAuth();
 
   const fetchBusinesses = async () => {
     setLoading(true);
@@ -29,8 +27,13 @@ const BusinessList = ({
       }
     } catch (err) {
       console.error("Error fetching businesses:", err);
-      setError("Error al cargar la lista de negocios.");
-      toast.error("Error al cargar la lista de negocios.");
+      if (err.message) {
+        setBusinesses([]);
+        toast.info("No se encontraron negocios para este usuario.");
+      } else {
+        setError("Error al cargar la lista de negocios.");
+        toast.error("Error al cargar la lista de negocios.");
+      }
     } finally {
       setLoading(false);
     }

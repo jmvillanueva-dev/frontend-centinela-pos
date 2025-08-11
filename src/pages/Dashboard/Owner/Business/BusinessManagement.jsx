@@ -87,7 +87,7 @@ const BusinessManagement = () => {
         emailEmpleado: data.email,
         emailJefe: userData.email,
         // id: selectedBusinessForInvite._id,
-        // companyCode: selectedBusinessForInvite.companyCode,
+        companyCode: selectedBusinessForInvite.companyCode,
       };
 
       const url = `${import.meta.env.VITE_API_URL}/negocios/add-employee`;
