@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import useFetch from "../../../hooks/useFetch.js";
 import { Zap, Check, ArrowLeft } from "lucide-react";
+import storeAuth from "../../../context/storeAuth.jsx";
 
 /**
  * @component
@@ -32,10 +33,10 @@ const UpgradePlanPage = () => {
         "Soporte básico por correo",
         "Actualizaciones de seguridad",
       ],
-      cta: "Plan Actual",
+      cta: "Activar Plan Free",
       color: "from-blue-velvet/10 to-blue-velvet/30",
       textColor: "text-blue-velvet",
-      disabled: true, // El plan Starter no se puede comprar
+      disabled: false,
     },
     {
       id: "business",
@@ -56,7 +57,8 @@ const UpgradePlanPage = () => {
       color: "from-teal-tide/20 to-teal-tide/40",
       textColor: "text-teal-600",
       popular: true,
-      priceId: "", // Aquí se asignará el ID de precio de la API
+      priceId: "",
+      disabled: false, // Ahora se maneja dinámicamente
     },
     {
       id: "enterprise",
@@ -77,47 +79,88 @@ const UpgradePlanPage = () => {
       cta: "Comprar Plan Enterprise",
       color: "from-tangerine/20 to-tangerine/40",
       textColor: "text-tangerine",
-      priceId: "", // Aquí se asignará el ID de precio de la API
+      priceId: "",
+      disabled: false, // Ahora se maneja dinámicamente
     },
   ];
 
   useEffect(() => {
-    // Función para obtener los precios de Stripe y combinarlos con los datos locales
-    const fetchPrices = async () => {
-      try {
-        const url = `${import.meta.env.VITE_API_URL}/boss/plans`;
-        const response = await fetchDataBackend(url, null, "GET");
+    // Escucha los cambios en el store de Zustand para actualizar la UI
+    const unsubscribe = storeAuth.subscribe(
+      (state) => {
+        const currentPlanId = state.user?.plan;
 
-        // Mapear los precios de la API a los planes estáticos
+        // Mapear y combinar los datos cuando el plan del usuario cambie
         const updatedPlans = staticPlans.map((plan) => {
-          // Si el plan es Business o Enterprise, busca su ID de precio en la respuesta
+          // Si el plan del usuario coincide con el plan estático, actualiza el estado local del plan.
+          if (currentPlanId && plan.id === currentPlanId) {
+            return {
+              ...plan,
+              disabled: true,
+              cta: "Plan Actual",
+            };
+          }
+
+          // Si no es el plan actual, asegúrate de que el estado sea el predeterminado
+          // Esto evita que "Plan Actual" se quede pegado si el usuario cambia de plan
+          const defaultPlan = staticPlans.find((p) => p.id === plan.id);
+          return {
+            ...plan,
+            disabled: defaultPlan.disabled,
+            cta: defaultPlan.cta,
+          };
+        });
+
+        setPlansData(updatedPlans);
+      },
+      (state) => state.user?.plan // Solo escucha los cambios en `user.plan`
+    );
+
+    const fetchPlans = async () => {
+      try {
+        setLoading(true);
+        // 1. Obtener los precios de Stripe
+        const plansUrl = `${import.meta.env.VITE_API_URL}/boss/plans`;
+        const plansResponse = await fetchDataBackend(plansUrl, null, "GET");
+
+        // 2. Mapear y combinar los datos con el plan actual del usuario.
+        // Se asegura de que el estado de los planes se inicialice correctamente.
+        const currentPlanId = storeAuth.getState().user?.plan;
+        const updatedPlans = staticPlans.map((plan) => {
           if (plan.id === "business" || plan.id === "enterprise") {
-            const stripePrice = response?.prices?.data.find(
+            const stripePrice = plansResponse?.prices?.data.find(
               (p) =>
                 p.nickname ===
                 (plan.id === "business"
                   ? "Plan Business"
                   : "Plan Personalizado")
             );
+            plan.priceId = stripePrice ? stripePrice.id : "";
+          }
+          if (currentPlanId && plan.id === currentPlanId) {
             return {
               ...plan,
-              priceId: stripePrice ? stripePrice.id : "",
+              disabled: true,
+              cta: "Plan Actual",
             };
           }
           return plan;
         });
+
         setPlansData(updatedPlans);
       } catch (err) {
         setError("No se pudieron cargar los planes de suscripción.");
         toast.error("Hubo un error al cargar los planes.");
-        console.error("Error fetching Stripe prices:", err);
+        console.error("Error fetching data:", err);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchPrices();
-  }, []);
+    fetchPlans();
+
+    return unsubscribe; // Limpia el listener de Zustand al desmontar el componente
+  }, [fetchDataBackend]);
 
   /**
    * @function handleUpgrade
@@ -165,6 +208,8 @@ const UpgradePlanPage = () => {
     );
   }
 
+  const currentPlanId = storeAuth.getState().user?.plan;
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 p-8 text-white">
       <ToastContainer position="top-right" autoClose={3000} hideProgressBar />
@@ -188,6 +233,8 @@ const UpgradePlanPage = () => {
               className={`relative rounded-2xl overflow-hidden border-2 transition-all duration-300 ${
                 plan.popular
                   ? "border-teal-tide shadow-xl transform md:-translate-y-2"
+                  : plan.id === currentPlanId
+                  ? "border-blue-velvet shadow-xl" // Estilo para el plan actual
                   : "border-gray-200"
               } ${
                 plan.disabled
@@ -198,6 +245,11 @@ const UpgradePlanPage = () => {
               {plan.popular && (
                 <div className="absolute top-0 right-0 bg-teal-tide text-white px-4 py-1 text-sm font-bold rounded-bl-lg">
                   ¡MÁS POPULAR!
+                </div>
+              )}
+              {plan.id === currentPlanId && (
+                <div className="absolute top-0 right-0 bg-blue-velvet text-white px-4 py-1 text-sm font-bold rounded-bl-lg">
+                  PLAN ACTUAL
                 </div>
               )}
 
@@ -265,7 +317,6 @@ const UpgradePlanPage = () => {
  * @component
  * @description Componente para mostrar el resultado de la transacción de Stripe.
  */
-
 const PaymentResultPage = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -276,6 +327,42 @@ const PaymentResultPage = () => {
   useEffect(() => {
     if (success) {
       toast.success("¡Pago realizado con éxito! Tu plan se ha actualizado.");
+
+      // Obtenemos el ID del precio de Stripe de los parámetros de la URL
+      const priceId = searchParams.get("priceId");
+
+      // Mapeamos el priceId de Stripe a un ID de plan interno
+      let newPlanId = null;
+      if (priceId) {
+        const plans = [
+          { id: "business", priceId: "tu_price_id_de_stripe_para_business" }, // Reemplaza con tus IDs reales
+          {
+            id: "enterprise",
+            priceId: "tu_price_id_de_stripe_para_enterprise",
+          }, // Reemplaza con tus IDs reales
+        ];
+        const purchasedPlan = plans.find((p) => p.priceId === priceId);
+        if (purchasedPlan) {
+          newPlanId = purchasedPlan.id;
+        }
+      }
+
+      // Si se encuentra un nuevo plan, actualizamos el estado global de Zustand
+      if (newPlanId) {
+        storeAuth.setState((state) => ({
+          user: { ...state.user, plan: newPlanId },
+        }));
+        // AHORA, PERSISTIMOS EL ESTADO ACTUALIZADO EN EL LOCAL STORAGE
+        // Esto es crucial para que el estado persista al recargar la página
+        const updatedUser = { ...storeAuth.getState().user, plan: newPlanId };
+        localStorage.setItem("user", JSON.stringify(updatedUser));
+        console.log(`Plan del usuario actualizado a: ${newPlanId}`);
+        console.log("Estado del usuario guardado en localStorage.");
+      } else {
+        console.log(
+          "No se pudo determinar el nuevo plan a partir del priceId."
+        );
+      }
     }
     if (canceled) {
       toast.info("Pago cancelado. Puedes intentarlo de nuevo.");
