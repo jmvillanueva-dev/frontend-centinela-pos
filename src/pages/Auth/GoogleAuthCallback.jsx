@@ -8,6 +8,7 @@ import storeAuth from "../../context/storeAuth.jsx";
  * @description Componente para manejar la redirección del callback de Google.
  * Lee los parámetros de la URL, almacena los datos de autenticación y redirige al dashboard.
  */
+
 const GoogleAuthCallback = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -16,14 +17,6 @@ const GoogleAuthCallback = () => {
     // Extraer los parámetros de la URL
     const token = searchParams.get("token");
     const userDataParam = searchParams.get("user");
-
-    // --- Inicio de depuración exhaustiva ---
-    console.log("--- DEBUG: GoogleAuthCallback ---");
-    console.log("URL completa:", window.location.href);
-    console.log("Valor de 'token':", token);
-    console.log("Valor de 'user':", userDataParam);
-    console.log("---------------------------------");
-    // --- Fin de depuración ---
 
     if (token && userDataParam) {
       try {
@@ -56,11 +49,9 @@ const GoogleAuthCallback = () => {
           "Hubo un problema al procesar los datos de autenticación. Por favor, inténtalo de nuevo."
         );
 
-        // Redirigir a la página de login en caso de error
         navigate("/login", { replace: true });
       }
     } else {
-      // Si no hay token o datos, redirigir al login
       toast.error("No se pudieron obtener los datos de autenticación.");
       navigate("/login", { replace: true });
     }

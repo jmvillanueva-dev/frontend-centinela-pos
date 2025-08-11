@@ -53,7 +53,6 @@ const LoginPage = () => {
         );
       }
 
-      // Guardar datos en el store sin token (usamos un valor temporal)
       storeAuth.getState().login(response.token, response);
 
       localStorage.setItem("token", response.token);
@@ -76,7 +75,7 @@ const LoginPage = () => {
           error.response.data?.message ||
           `Error ${error.response.status}: ${error.response.statusText}`;
       } else if (error.message) {
-        errorMessage = error.message;
+        toast.error(error.message);
         console.log(errorMessage);
       }
 

@@ -2,7 +2,15 @@ import { useState, useRef, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import useFetch from "../../../hooks/useFetch.js";
-import { X, User, Lock, Upload, Eye, EyeOff, XCircle, LogOut  } from "lucide-react";
+import {
+  X,
+  User,
+  Lock,
+  Upload,
+  Eye,
+  EyeOff,
+  XCircle,
+} from "lucide-react";
 
 const AdminProfileModal = ({
   showModal,
@@ -101,13 +109,14 @@ const AdminProfileModal = ({
     }
 
     try {
-      const response = await fetchDataBackend(
-        "https://pos-centinela-backend.onrender.com/api/boss/perfil/update",
-        formData,
-        "PUT"
-      );
+      const url = `${import.meta.env.VITE_API_URL}/boss/perfil/update`;
+      const response = await fetchDataBackend(url, formData, "PUT");
 
-      if (response && response.msg === "Datos actualizados correctamente") {
+      if (
+        (response && response.msg === "Datos actualizados correctamente") ||
+        response.msg ===
+          "Datos actualizados correctamente, excepto el email (no se puede modificar un email de Google)"
+      ) {
         toast.success("Perfil actualizado con éxito!");
         const updatedUser = { ...userData, ...response.data };
         onUpdateSuccess(updatedUser);
@@ -140,7 +149,7 @@ const AdminProfileModal = ({
       );
 
       if (response && response.msg === "Password actualizado correctamente") {
-        toast.success(response?.msg || "Contraseña actualizada con éxito!");
+        toast.success("Contraseña actualizada con éxito!");
         closeModal();
       } else {
         toast.error(response?.msg || "Error al actualizar la contraseña.");
