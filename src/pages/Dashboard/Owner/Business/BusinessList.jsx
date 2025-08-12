@@ -94,28 +94,39 @@ const BusinessList = ({
                     </p>
                   </div>
                 </div>
-                <div className="flex justify-end gap-2">
-                  <button
-                    onClick={() => onInviteEmployee(business)} // Nuevo botón de invitación
-                    className="p-2 bg-green-100 rounded-full text-green-700 hover:bg-green-200"
-                    title="Invitar Empleado"
-                  >
-                    <UserPlus size={18} />
-                  </button>
-                  <button
-                    onClick={() => onSelectBusiness(business._id, "view")}
-                    className="p-2 bg-gray-200 rounded-full text-gray-700 hover:bg-gray-300"
-                    title="Ver detalle"
-                  >
-                    <Eye size={18} />
-                  </button>
-                  <button
-                    onClick={() => onSelectBusiness(business._id, "edit")}
-                    className="p-2 bg-blue-100 rounded-full text-blue-700 hover:bg-blue-200"
-                    title="Editar negocio"
-                  >
-                    <Edit size={18} />
-                  </button>
+                <div className="flex justify-between gap-2">
+                  <div className="flex space-x-2 justify-center items-center">
+                    <button
+                      onClick={() => onSelectBusiness(business._id, "view")}
+                      className="p-2 bg-gray-200 rounded-full text-gray-700 hover:bg-gray-300 hover:cursor-pointer"
+                      title="Ver detalle"
+                    >
+                      <Eye size={18} />
+                    </button>
+                    <span
+                      onClick={() => onSelectBusiness(business._id, "view")}
+                      className=" text-gray-700 text-xs hover:cursor-pointer"
+                    >
+                      Ver detalle
+                    </span>
+                  </div>
+
+                  <div>
+                    <button
+                      onClick={() => onInviteEmployee(business)}
+                      className="p-2 bg-green-100 rounded-full text-green-700 hover:bg-green-200 hover:cursor-pointer"
+                      title="Invitar Empleado"
+                    >
+                      <UserPlus size={18} />
+                    </button>
+                    <button
+                      onClick={() => onSelectBusiness(business._id, "edit")}
+                      className="p-2 bg-blue-100 rounded-full text-blue-700 hover:bg-blue-200 hover:cursor-pointer"
+                      title="Editar negocio"
+                    >
+                      <Edit size={18} />
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}

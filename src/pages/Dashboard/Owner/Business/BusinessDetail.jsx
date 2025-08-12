@@ -1,41 +1,73 @@
 import { useEffect, useState } from "react";
 import useFetch from "../../../../hooks/useFetch.js";
 import { toast } from "react-toastify";
-import { ArrowLeft, User } from "lucide-react";
+import { ArrowLeft, User, Trash2 } from "lucide-react";
 
 const BusinessDetail = ({ businessId, onBack }) => {
   const { fetchDataBackend } = useFetch();
   const [business, setBusiness] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [deletingEmployeeId, setDeletingEmployeeId] = useState(null);
+
+  const fetchBusinessDetail = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const url = `${
+        import.meta.env.VITE_API_URL
+      }/negocios/detail/${businessId}`;
+      const response = await fetchDataBackend(url, null, "GET");
+      if (response) {
+        setBusiness(response);
+      } else {
+        setError("No se pudo cargar la información del negocio.");
+        toast.error("No se pudo cargar la información del negocio.");
+      }
+    } catch (err) {
+      console.error("Error fetching business detail:", err);
+      setError("Error al cargar el detalle del negocio.");
+      toast.error("Error al cargar el detalle del negocio.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchBusinessDetail = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const url = `${
-          import.meta.env.VITE_API_URL
-        }/negocios/detail/${businessId}`;
-        const response = await fetchDataBackend(url, null, "GET");
-        if (response) {
-          setBusiness(response);
-        } else {
-          setError("No se pudo cargar la información del negocio.");
-          toast.error("No se pudo cargar la información del negocio.");
-        }
-      } catch (err) {
-        console.error("Error fetching business detail:", err);
-        setError("Error al cargar el detalle del negocio.");
-        toast.error("Error al cargar el detalle del negocio.");
-      } finally {
-        setLoading(false);
-      }
-    };
     if (businessId) {
       fetchBusinessDetail();
     }
   }, [businessId, fetchDataBackend]);
+
+  const handleDeleteEmployee = async (employeeId) => {
+    if (
+      window.confirm(
+        "¿Estás seguro de que deseas eliminar a este empleado? Esta acción no se puede deshacer."
+      )
+    ) {
+      setDeletingEmployeeId(employeeId);
+      try {
+        const url = `https://pos-centinela-backend.onrender.com/api/negocios/delete-employee/${employeeId}`;
+        await fetchDataBackend(url, null, "DELETE");
+        toast.success("Empleado eliminado exitosamente.");
+
+        // Actualizar el estado para remover al empleado de la lista
+        setBusiness((prevBusiness) => ({
+          ...prevBusiness,
+          empleados: prevBusiness.empleados.filter(
+            (emp) => emp._id !== employeeId
+          ),
+        }));
+      } catch (err) {
+        console.error("Error deleting employee:", err);
+        toast.error(
+          "Error al eliminar el empleado. Por favor, inténtalo de nuevo."
+        );
+      } finally {
+        setDeletingEmployeeId(null);
+      }
+    }
+  };
 
   if (loading) {
     return <p>Cargando detalle del negocio...</p>;
@@ -119,12 +151,24 @@ const BusinessDetail = ({ businessId, onBack }) => {
                   className="flex items-center p-4 bg-gray-50 rounded-lg shadow-sm"
                 >
                   <User size={20} className="text-gray-500 mr-3" />
-                  <div>
+                  <div className="flex-grow">
                     <p className="font-medium">
                       {employee.nombres} {employee.apellidos}
                     </p>
                     <p className="text-sm text-gray-500">{employee.email}</p>
                   </div>
+                  <button
+                    onClick={() => handleDeleteEmployee(employee._id)}
+                    className="p-2 rounded-full text-red-500 hover:bg-red-100 transition-colors"
+                    disabled={deletingEmployeeId === employee._id}
+                    title="Eliminar empleado"
+                  >
+                    {deletingEmployeeId === employee._id ? (
+                      <span className="animate-spin h-5 w-5 border-2 border-red-500 border-t-transparent rounded-full"></span>
+                    ) : (
+                      <Trash2 size={20} />
+                    )}
+                  </button>
                 </div>
               ))}
             </div>
