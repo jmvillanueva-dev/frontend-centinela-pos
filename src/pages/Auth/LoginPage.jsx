@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import AuthLayout from "../../components/auth/AuthLayout.jsx";
 import storeAuth from "../../context/storeAuth.jsx";
 import useFetch from "../../hooks/useFetch.js";
-import { User, Briefcase, Eye, EyeOff } from "lucide-react";
+import { User, Briefcase, Eye, EyeOff, Settings } from "lucide-react";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -101,24 +101,35 @@ const LoginPage = () => {
       <div className="flex flex-col flex-1 w-full overflow-y-auto lg:w-1/2 scrollbar-hide">
         <div className="flex-1 flex flex-col items-center justify-center p-6">
           <div className="w-full max-w-md">
-            <Link
-              to="/"
-              className="flex items-center text-blue-velvet/80 mb-6 hover:text-blue-800 hover:scale-105 transition-transform duration-300"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5 mr-1"
-                viewBox="0 0 20 20"
-                fill="currentColor"
+            <div className="flex justify-between">
+              <Link
+                to="/"
+                className="flex items-center text-blue-velvet/80 mb-6 hover:text-blue-800 hover:scale-105 transition-transform duration-300"
               >
-                <path
-                  fillRule="evenodd"
-                  d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
-                  clipRule="evenodd"
-                />
-              </svg>
-              Volver al inicio
-            </Link>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5 mr-1"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+                Volver al inicio
+              </Link>
+
+              <div>
+                <Link
+                  to="/admin/login"
+                  className="flex items-center text-blue-velvet/80 mb-6 hover:text-blue-800 hover:scale-105 transition-transform duration-300"
+                >
+                  <Settings />
+                </Link>
+              </div>
+            </div>
 
             <h1 className="text-3xl font-bold mb-2">Iniciar Sesión</h1>
 

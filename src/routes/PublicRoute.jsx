@@ -21,7 +21,7 @@ const PublicRoute = () => {
     }, []);
 
     if (isLoading) {
-        return null; // O un spinner de carga
+        return null;
     }
 
     if (shouldRedirect) {

@@ -24,7 +24,12 @@ const ProtectedRoute = ({ allowedRoles }) => {
     }
 
     if (allowedRoles && !allowedRoles.includes(userRole)) {
-        const redirectPath = userRole === 'jefe' ? '/dashboard/admin' : '/dashboard/employee';
+        const redirectPath =
+          userRole === "jefe"
+            ? "/dashboard/admin"
+            : userRole === "administrador"
+            ? "/admin/dashboard"
+            : "/dashboard/employee";
         return <Navigate to={redirectPath} replace />;
     }
 

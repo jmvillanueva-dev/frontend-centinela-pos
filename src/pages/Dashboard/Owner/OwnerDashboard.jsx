@@ -19,12 +19,12 @@ import {
   LogOut,
 } from "lucide-react";
 import storeAuth from "../../../context/storeAuth.jsx";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import AdminProfileModal from "./AdminProfileModal.jsx";
-import BusinessManagement from "../Owner/Business/BusinessManagement.jsx";
+import BusinessManagement from "./Business/BusinessManagement.jsx";
 import centinelaIcon from "../../../assets/centinela-icon.svg";
 
-const AdminDashboard = () => {
+const OwnerDashboard = () => {
   const navigate = useNavigate();
   const [activeMenu, setActiveMenu] = useState("dashboard");
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -419,4 +419,4 @@ const AdminDashboard = () => {
   );
 };
 
-export default AdminDashboard;
+export default OwnerDashboard;
