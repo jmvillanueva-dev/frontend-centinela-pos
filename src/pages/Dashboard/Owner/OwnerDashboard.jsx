@@ -22,6 +22,7 @@ import storeAuth from "../../../context/storeAuth.jsx";
 import { ToastContainer } from "react-toastify";
 import AdminProfileModal from "./AdminProfileModal.jsx";
 import BusinessManagement from "./Business/BusinessManagement.jsx";
+import FloatingChat from "../../../components/chat/FloatingChat.jsx"
 import centinelaIcon from "../../../assets/centinela-icon.svg";
 
 const OwnerDashboard = () => {
@@ -99,6 +100,7 @@ const OwnerDashboard = () => {
   return (
     <div className="flex h-screen bg-[var(--color-gray-light)]">
       <ToastContainer position="top-center" />
+      <FloatingChat userType="Propietario" />
 
       {/* Sidebar Mobile Overlay */}
       {sidebarOpen && (
