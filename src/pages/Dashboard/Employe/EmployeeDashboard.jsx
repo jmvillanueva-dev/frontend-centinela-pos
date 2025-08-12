@@ -16,8 +16,8 @@ import {
 } from "lucide-react";
 import { ToastContainer, toast } from "react-toastify";
 import storeAuth from "../../../context/storeAuth.jsx";
-import UserProfileModal from "./UserProfileModal.jsx"; // Importar el nuevo componente
-
+import UserProfileModal from "./UserProfileModal.jsx";
+import FloatingChat from "../../../components/chat/FloatingChat.jsx"
 import centinelaIcon from "../../../assets/centinela-icon.svg";
 
 const EmployeeDashboard = () => {
@@ -80,6 +80,7 @@ const EmployeeDashboard = () => {
   return (
     <div className="flex h-screen bg-[var(--color-gray-light)]">
       <ToastContainer />
+      <FloatingChat userType="Empleado" />
 
       {/* Sidebar Mobile Overlay */}
       {sidebarOpen && (
