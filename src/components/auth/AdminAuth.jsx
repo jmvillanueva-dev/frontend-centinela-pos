@@ -35,9 +35,13 @@ const AdminLoginPage = () => {
       navigate("/admin/dashboard", { replace: true });
     } catch (error) {
       console.error("Error en el login:", error);
-      toast.error(
-        error.message || "Error con el servidor. Inténtalo de nuevo más tarde."
-      );
+      const errorMsg =
+        error.msg ||
+        error.response?.msg ||
+        error.message ||
+        "Error con el servidor. Inténtalo de nuevo más tarde.";
+
+      toast.error(errorMsg);
     } finally {
       setLoading(false);
     }

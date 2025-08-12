@@ -402,7 +402,7 @@ const AdminDetail = ({ admin, onBack, onDeactivate }) => {
       {admin.status && admin._id !== "686dbc4a3db0c30454d5fd93" && (
         <button
           onClick={() => onDeactivate(admin._id)}
-          className="mt-6 flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
+          className="mt-6 flex items-center gap-2 px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors"
         >
           <FaTrashAlt /> Desactivar Administrador
         </button>
@@ -756,7 +756,7 @@ const AdminDashboard = () => {
         const response = await fetchDataBackend(
           `${API_URL}/admins/delete/${adminId}`,
           null,
-          "PUT"
+          "DELETE"
         );
         toast.success(response.msg || "Administrador desactivado con éxito.");
         setSelectedUser(null);
@@ -877,21 +877,21 @@ const AdminDashboard = () => {
             <img
               src={userData.foto}
               alt="Foto de perfil"
-              className="w-24 h-24 rounded-full object-cover border-4 border-indigo-600"
+              className="w-14 h-14 rounded-full object-cover"
             />
           ) : (
-            <div className="w-24 h-24 rounded-full bg-indigo-500 text-white flex items-center justify-center text-3xl font-bold">
+            <div className="w-14 h-14 rounded-full bg-gray-400 text-white flex items-center justify-center text-3xl font-bold">
               {getUserInitials(userData.nombres, userData.apellidos)}
             </div>
           )}
           <div className="mt-4 text-center">
-            <p className="text-base font-bold text-indigo-600">
+            <p className="text-sm font-bold text-indigo-600">
               {userData.rol.toUpperCase()}
             </p>
             <p className="text-gray-800">
               {userData.nombres} {userData.apellidos}
             </p>
-            <p className="text-gray-500">{userData.email}</p>
+            {/* <p className="text-gray-500">{userData.email}</p> */}
           </div>
         </div>
         <nav className="flex-1 p-4">
@@ -953,7 +953,7 @@ const AdminDashboard = () => {
                     : "text-gray-600 hover:bg-gray-100"
                 }`}
               >
-                <FaBuilding /> Listar Propietarios
+                <FaBuilding /> Ver Propietarios
               </button>
             </li>
           </ul>
